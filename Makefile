@@ -2,7 +2,7 @@ CC=cl.exe
 LNK=link.exe
 
 # https://learn.microsoft.com/en-us/cpp/build/reference/compiler-options-listed-by-category?view=msvc-170
-C_FLAGS=/nologo /Fdbuild\\ /Febuild\\
+C_FLAGS=/nologo /Fdbuild\\ /Febuild\\ /Iinc /c
 # https://learn.microsoft.com/en-us/cpp/build/reference/linker-options?view=msvc-170
 L_FLAGS=/nologo
 exe=build/main.exe
