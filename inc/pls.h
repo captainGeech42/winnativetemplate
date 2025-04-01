@@ -1,6 +1,3 @@
-#ifndef __PLS_H
-#define __PLS_H
+#pragma once
 
 int myadd(int a, int b);
-
-#endif // __PLS_H

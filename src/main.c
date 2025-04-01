@@ -1,11 +1,12 @@
 #include <Windows.h>
 #include <stdio.h>
 
+#include "log.h"
 #include "pls.h"
 
 int main(int argc, char* argv[]) {
-    puts("hello world");
+    LOG_INFO("hello world");
 
-    printf("%d\n", myadd(5, 8));
+    LOG_ERROR("%d", myadd(5, 8));
     return 0;
 }
