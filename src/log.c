@@ -48,7 +48,7 @@ static void _log_msg(const char *prefix, __logc_msg_def char *err, const char *f
     offset += snprintf(buf+offset, BUF_SIZE-offset-1, "[%s] %s", prefix, msg);
 
     if (err) {
-        offset += snprintf(buf+offset, BUF_SIZE-offset-1, "(error: %s)", err);
+        offset += snprintf(buf+offset, BUF_SIZE-offset-1, " (error: %s)", err);
         LocalFree(err);
     }
 
