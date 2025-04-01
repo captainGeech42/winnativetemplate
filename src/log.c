@@ -4,12 +4,21 @@
 #define MSG_SIZE 0x1000
 #define BUF_SIZE (MSG_SIZE+0x100)
 
+#ifndef LOG_PLAIN
 #define RESET "\x1b[0m"
 #define RED "\x1b[1;31m"
 #define GREEN "\x1b[1;32m"
 #define YELLOW "\x1b[1;33m"
 #define BLUE "\x1b[1;34m"
 #define GRAY "\x1b[38;5;244m"
+#else
+#define RESET
+#define RED
+#define GREEN
+#define YELLOW
+#define BLUE
+#define GRAY
+#endif // LOG_PLAIN
 
 #ifdef LOG_MIN
 #define __logc_func_def
@@ -22,8 +31,8 @@
 #endif // LOG_MIN
 
 static void _log_msg(const char *prefix, __logc_msg_def char *err, const char *fmt, va_list args) {
-    char msg[MSG_SIZE] = {0};
     char ts[TS_SIZE] = {0};
+    char msg[MSG_SIZE] = {0};
     char buf[BUF_SIZE] = {0};
 
     // make an iso8601ish timestamp

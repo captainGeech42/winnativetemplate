@@ -4,7 +4,8 @@ LNK=link.exe
 # logging preprocessor definitions you can configure:
 #   - LOG_PIDS: this will log the pid/tid in each message
 #   - LOG_MIN: this will minify the logging by removing source file/function information from log messages
-#   - DEBUG: if defined, debug log messages will be enabled
+#   - LOG_PLAIN: this will disable the ANSI coloring of log messages
+#   - DEBUG: this enables debug log messages
 
 # https://learn.microsoft.com/en-us/cpp/build/reference/compiler-options-listed-by-category?view=msvc-170
 C_FLAGS=/nologo /Fdbuild\\ /Febuild\\ /Iinc /c /DLOG_PIDS
