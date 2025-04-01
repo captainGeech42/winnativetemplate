@@ -20,6 +20,11 @@
 #define GRAY
 #endif // LOG_PLAIN
 
+#define PREFIX_DEBUG BLUE ">" RESET
+#define PREFIX_INFO GREEN "+" RESET
+#define PREFIX_WARN YELLOW "*" RESET
+#define PREFIX_ERROR RED "!" RESET
+
 #ifdef LOG_MIN
 #define __logc_func_def
 #define __logc_func_args
@@ -33,7 +38,7 @@
 static void __crash() {
 #pragma warning (push)
 #pragma warning (disable:4312)
-    *((unsigned int*)0xdeadbeef)= 0x42;
+    *((unsigned int*)0xabcd00deadbeef)= 0x42;
 #pragma warning (pop)
 }
 
@@ -123,7 +128,7 @@ static char *_get_normal_error() {
 void __LOG_Debug(__logc_func_def const char *fmt, ...) {
     va_list args;
     va_start(args, fmt);
-    _log_msg(BLUE ">" RESET, __logc_func_args NULL, fmt, args);
+    _log_msg(PREFIX_DEBUG, __logc_func_args NULL, fmt, args);
     va_end(args);
 }
 
@@ -131,28 +136,28 @@ void __LOG_Debug_Errno(__logc_func_def const char *fmt, ...) {
     va_list args;
     va_start(args, fmt);
     char *err = _get_normal_error();
-    _log_msg(BLUE ">" RESET, __logc_func_args err, fmt, args);
+    _log_msg(PREFIX_DEBUG, __logc_func_args err, fmt, args);
     va_end(args);
 }
 
 void __LOG_Info(__logc_func_def const char *fmt, ...) {
     va_list args;
     va_start(args, fmt);
-    _log_msg(GREEN "+" RESET, __logc_func_args NULL, fmt, args);
+    _log_msg(PREFIX_INFO, __logc_func_args NULL, fmt, args);
     va_end(args);
 }
 
 void __LOG_Warn(__logc_func_def const char *fmt, ...) {
     va_list args;
     va_start(args, fmt);
-    _log_msg(YELLOW "*" RESET, __logc_func_args NULL, fmt, args);
+    _log_msg(PREFIX_WARN, __logc_func_args NULL, fmt, args);
     va_end(args);
 }
 
 void __LOG_Error(__logc_func_def const char *fmt, ...) {
     va_list args;
     va_start(args, fmt);
-    _log_msg(RED "!" RESET, __logc_func_args NULL, fmt, args);
+    _log_msg(PREFIX_ERROR, __logc_func_args NULL, fmt, args);
     va_end(args);
 }
 
@@ -160,14 +165,14 @@ void __LOG_Error_Errno(__logc_func_def const char *fmt, ...) {
     va_list args;
     va_start(args, fmt);
     char *err = _get_normal_error();
-    _log_msg(RED "!" RESET, __logc_func_args err, fmt, args);
+    _log_msg(PREFIX_ERROR, __logc_func_args err, fmt, args);
     va_end(args);
 }
 
 void __LOG_Wide_Debug(__logc_func_def const wchar_t *fmt, ...) {
     va_list args;
     va_start(args, fmt);
-    _log_wide_msg(BLUE ">" RESET, __logc_func_args NULL, fmt, args);
+    _log_wide_msg(PREFIX_DEBUG, __logc_func_args NULL, fmt, args);
     va_end(args);
 }
 
@@ -175,28 +180,28 @@ void __LOG_Wide_Debug_Errno(__logc_func_def const wchar_t *fmt, ...) {
     va_list args;
     va_start(args, fmt);
     char *err = _get_normal_error();
-    _log_wide_msg(BLUE ">" RESET, __logc_func_args err, fmt, args);
+    _log_wide_msg(PREFIX_DEBUG, __logc_func_args err, fmt, args);
     va_end(args);
 }
 
 void __LOG_Wide_Info(__logc_func_def const wchar_t *fmt, ...) {
     va_list args;
     va_start(args, fmt);
-    _log_wide_msg(GREEN "+" RESET, __logc_func_args NULL, fmt, args);
+    _log_wide_msg(PREFIX_INFO, __logc_func_args NULL, fmt, args);
     va_end(args);
 }
 
 void __LOG_Wide_Warn(__logc_func_def const wchar_t *fmt, ...) {
     va_list args;
     va_start(args, fmt);
-    _log_wide_msg(YELLOW "*" RESET, __logc_func_args NULL, fmt, args);
+    _log_wide_msg(PREFIX_WARN, __logc_func_args NULL, fmt, args);
     va_end(args);
 }
 
 void __LOG_Wide_Error(__logc_func_def const wchar_t *fmt, ...) {
     va_list args;
     va_start(args, fmt);
-    _log_wide_msg(RED "!" RESET, __logc_func_args NULL, fmt, args);
+    _log_wide_msg(PREFIX_ERROR, __logc_func_args NULL, fmt, args);
     va_end(args);
 }
 
@@ -204,6 +209,6 @@ void __LOG_Wide_Error_Errno(__logc_func_def const wchar_t *fmt, ...) {
     va_list args;
     va_start(args, fmt);
     char *err = _get_normal_error();
-    _log_wide_msg(RED "!" RESET, __logc_func_args err, fmt, args);
+    _log_wide_msg(PREFIX_ERROR, __logc_func_args err, fmt, args);
     va_end(args);
 }
