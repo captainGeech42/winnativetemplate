@@ -9,6 +9,8 @@ int main(int argc, char* argv[]) {
 
     LOG_DEBUG("this is a debug message");
 
+    LOGW_WARN(L"this can even do %s", L"wide strings!");
+
     HANDLE hFile = CreateFileA("C:\\thesearenotthedroidsyourelookingfor.txt", GENERIC_READ, 0, NULL, OPEN_EXISTING, 0, NULL);
     if (hFile == INVALID_HANDLE_VALUE) {
         LOG_ERROR_ERRNO("file open failed");

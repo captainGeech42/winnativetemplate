@@ -2,7 +2,7 @@ CC=cl.exe
 LNK=link.exe
 
 # logging preprocessor definitions you can configure:
-#   - LOG_PIDS: this will log the pid/tid in each message
+#   - LOG_PIDS: this will include the pid/tid in each message
 #   - LOG_MIN: this will minify the logging by removing source file/function information from log messages
 #   - LOG_PLAIN: this will disable the ANSI coloring of log messages
 #   - DEBUG: this enables debug log messages

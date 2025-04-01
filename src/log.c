@@ -30,6 +30,13 @@
 #define __logc_msg_def const char *filename, int linenum, const char *func, 
 #endif // LOG_MIN
 
+static void __crash() {
+#pragma warning (push)
+#pragma warning (disable:4312)
+    *((unsigned int*)0xdeadbeef)= 0x42;
+#pragma warning (pop)
+}
+
 static void _log_msg(const char *prefix, __logc_msg_def char *err, const char *fmt, va_list args) {
     char ts[TS_SIZE] = {0};
     char msg[MSG_SIZE] = {0};
@@ -41,7 +48,11 @@ static void _log_msg(const char *prefix, __logc_msg_def char *err, const char *f
     strftime(ts, TS_SIZE, "%Y-%m-%d %H:%M:%S", lt);
 
     // format the log fstr into the msg buf
-    vsnprintf(msg, MSG_SIZE-1, fmt, args);
+    if (args) {
+        vsnprintf(msg, MSG_SIZE-1, fmt, args);
+    } else {
+        strncpy(msg, fmt, MSG_SIZE-1);
+    }
 
     // build the actual log buf according to the log preproc configuration
     int offset = 0;
@@ -63,6 +74,23 @@ static void _log_msg(const char *prefix, __logc_msg_def char *err, const char *f
 
     fprintf(stderr, "%s\n", buf);
     fflush(stderr);
+}
+
+static void _log_wide_msg(const char *prefix, __logc_msg_def char *err, const wchar_t *fmt, va_list args) {
+    wchar_t wmsg[MSG_SIZE] = {0};
+    char msg[MSG_SIZE] = {0};
+
+    // render out the wide format string
+    _vsnwprintf(wmsg, MSG_SIZE-1, fmt, args);
+
+    // convert the wide string to utf-8
+    if (!WideCharToMultiByte(CP_UTF8, WC_ERR_INVALID_CHARS, wmsg, -1, msg, MSG_SIZE, NULL, NULL)) {
+        LOG_ERROR_ERRNO("failed to render out wide log string, crashing program");
+        __crash();
+    }
+
+    // hand off to normal logging logic
+    _log_msg(prefix, __logc_func_args err, msg, NULL);
 }
 
 static char *_get_win_errstr(DWORD errnum) {
@@ -133,5 +161,49 @@ void __LOG_Error_Errno(__logc_func_def const char *fmt, ...) {
     va_start(args, fmt);
     char *err = _get_normal_error();
     _log_msg(RED "!" RESET, __logc_func_args err, fmt, args);
+    va_end(args);
+}
+
+void __LOG_Wide_Debug(__logc_func_def const wchar_t *fmt, ...) {
+    va_list args;
+    va_start(args, fmt);
+    _log_wide_msg(BLUE ">" RESET, __logc_func_args NULL, fmt, args);
+    va_end(args);
+}
+
+void __LOG_Wide_Debug_Errno(__logc_func_def const wchar_t *fmt, ...) {
+    va_list args;
+    va_start(args, fmt);
+    char *err = _get_normal_error();
+    _log_wide_msg(BLUE ">" RESET, __logc_func_args err, fmt, args);
+    va_end(args);
+}
+
+void __LOG_Wide_Info(__logc_func_def const wchar_t *fmt, ...) {
+    va_list args;
+    va_start(args, fmt);
+    _log_wide_msg(GREEN "+" RESET, __logc_func_args NULL, fmt, args);
+    va_end(args);
+}
+
+void __LOG_Wide_Warn(__logc_func_def const wchar_t *fmt, ...) {
+    va_list args;
+    va_start(args, fmt);
+    _log_wide_msg(YELLOW "*" RESET, __logc_func_args NULL, fmt, args);
+    va_end(args);
+}
+
+void __LOG_Wide_Error(__logc_func_def const wchar_t *fmt, ...) {
+    va_list args;
+    va_start(args, fmt);
+    _log_wide_msg(RED "!" RESET, __logc_func_args NULL, fmt, args);
+    va_end(args);
+}
+
+void __LOG_Wide_Error_Errno(__logc_func_def const wchar_t *fmt, ...) {
+    va_list args;
+    va_start(args, fmt);
+    char *err = _get_normal_error();
+    _log_wide_msg(RED "!" RESET, __logc_func_args err, fmt, args);
     va_end(args);
 }
